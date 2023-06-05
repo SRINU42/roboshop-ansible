@@ -24,7 +24,3 @@
         enabled: true
 
 
-echo -e " ${color} Start MongoDB Service ${nocolor} "
-systemctl enable mongod  &>>/tmp/roboshop.log
-systemctl restart mongod  &>>/tmp/roboshop.log
-stat_check $?
