@@ -1,0 +1,31 @@
+- name: Setup mongodb 
+  hosts: all
+  become: yes
+  tasks: 
+    - name: Copy MongoDB Repo file
+      ansible.builtin.copy:
+        src: mongodb.repo
+        dest: /etc/yum.repos.d/mongodb.repo 
+
+    - name: Installing MongoDB Server
+      ansible.builtin.yum:
+        name: mongodb-org
+        state: latest
+       
+    - name: Update MongoDB Listen Address
+      ansible.builtin.replace:
+        path: /etc/mongod.conf
+        regexp: '127.0.0.1'
+        replace: '0.0.0.0'
+
+    - name:  Starting Mongodb Server
+      ansible.builtin.systemd:
+        state: restarted
+        name: mongo
+        enabled: true
+
+
+echo -e " ${color} Start MongoDB Service ${nocolor} "
+systemctl enable mongod  &>>/tmp/roboshop.log
+systemctl restart mongod  &>>/tmp/roboshop.log
+stat_check $?
